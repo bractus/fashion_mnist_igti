@@ -54,19 +54,16 @@ def main(model):
 
     btn = st.button("Treinar")
 
-    model = get_model(cmd_oculta, 'relu', 'adam', 'sparse_categorical_crossentropy', ['accuracy'])
-
-    model.load_weights('model.h5')
-
     if btn:
         model = get_model(cmd_oculta, 'relu', 'adam', 'sparse_categorical_crossentropy', ['accuracy'])
 
         my_bar = st.progress(0)
         for i in range(slider_st):
             history = model.fit(train_images, train_labels, epochs=1)
-            st.write('Perda', round(history.history['loss'][0], 2), 'Acurácia', round(history.history['accuracy'][0], 2))
+            st.write(i, ' - Perda', round(history.history['loss'][0], 2), 'Acurácia', round(history.history['accuracy'][0], 2))
             my_bar.progress(i/slider_st)
         model.save_weights('model.h5')
+        my_bar.progress(100)
         st.success('Modelo treinado com sucesso!')
 
         test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
@@ -84,9 +81,14 @@ def main(model):
 
     btn2 = st.button('Prever')
 
-    if btn2 and model:
+    if btn2:
+
+        model = get_model(cmd_oculta, 'relu', 'adam', 'sparse_categorical_crossentropy', ['accuracy'])
+        model.load_weights('model.h5')
+
         img = np.expand_dims(test_images[slider_st2], 0)
         predictions = model.predict(img)
+
         pred_label = predictions.argmax()
         pct = predictions.max()
         pct = str((pct*100).round(0))
@@ -99,8 +101,8 @@ def main(model):
         plt.xticks(rotation=45)
         st.pyplot(fig)
 
-    elif btn2 and not model:
-        st.error('Modelo não está treinado!')
+    # elif btn2 and not model:
+    #     st.error('Modelo não está treinado!')
 
 if __name__ == '__main__':
     main(None)
