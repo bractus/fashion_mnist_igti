@@ -1,9 +1,9 @@
-import keras
+from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
-import keras.backend.tensorflow_backend as tb
-tb._SYMBOLIC_SCOPE.value = True
+# import keras.backend.tensorflow_backend as tb
+# tb._SYMBOLIC_SCOPE.value = True
 
 def get_model(size, activation, optimizer, loss, metrics):
     model = keras.Sequential([
