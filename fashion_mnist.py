@@ -34,7 +34,7 @@ def main(model):
 
     st.subheader('1.1. Visualizar imagens')
 
-    slider_st3 = st.slider('Tamanho do grid: ', 1, 5, 1)
+    slider_st3 = st.slider('Tamanho do grid: ', 1, 5, 3)
 
     fig = plt.figure(figsize=(10, 10))
     for i in range(slider_st3**2):
@@ -76,6 +76,7 @@ def main(model):
 
     slider_st2 = st.slider('Número da imagem: ', 0, test_images.shape[0]-1, 0)
 
+    fig = plt.figure(figsize=(10, 10))
     plt.grid(False)
     plt.imshow(test_images[slider_st2], cmap=plt.cm.binary)
     plt.xlabel(class_names[test_labels[slider_st2]])
@@ -90,6 +91,14 @@ def main(model):
         pct = predictions.max()
         pct = str((pct*100).round(0))
         st.write("Previsto: ", class_names[pred_label], " Porcentagem: ", pct)
+
+        fig = plt.figure(figsize=(5, 5))
+        colors = ['red']*10
+        colors[pred_label] = 'green'
+        plt.bar(class_names, predictions[0], color=colors)
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
+
     elif btn2 and not model:
         st.error('Modelo não está treinado!')
 
