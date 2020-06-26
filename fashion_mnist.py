@@ -54,14 +54,19 @@ def main(model):
 
     btn = st.button("Treinar")
 
-    if btn:
+    model = get_model(cmd_oculta, 'relu', 'adam', 'sparse_categorical_crossentropy', ['accuracy'])
 
-        model = get_model(cmd_oculta, 'relu', 'adam', 'sparse_categorical_crossentropy', ['accuracy'] )
+    model.load_weights('model.h5')
+
+    if btn:
+        model = get_model(cmd_oculta, 'relu', 'adam', 'sparse_categorical_crossentropy', ['accuracy'])
+
         my_bar = st.progress(0)
         for i in range(slider_st):
             history = model.fit(train_images, train_labels, epochs=1)
             st.write('Perda', round(history.history['loss'][0], 2), 'Acurácia', round(history.history['accuracy'][0], 2))
             my_bar.progress(i/slider_st)
+        model.save_weights('model.h5')
         st.success('Modelo treinado com sucesso!')
 
         test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
